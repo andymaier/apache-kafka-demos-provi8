@@ -12,6 +12,7 @@ buildNumber.properties
 **/.DS_Store
 Log*
 *iml
+.vscode/
 
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar

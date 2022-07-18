@@ -19,21 +19,38 @@ public class PerformanceProducer {
 
         Properties props = new Properties();
         props.put(BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-        props.put(BATCH_SIZE_CONFIG, 0);
-        props.put(LINGER_MS_CONFIG, 0);
+        props.put(BATCH_SIZE_CONFIG, 2_000);
+        props.put(LINGER_MS_CONFIG, 1);
+        //props.put(COMPRESSION_TYPE_CONFIG, "gzip");
+
+        /**
+         * 100 bytes
+         * 1ms
+         * -> erst nach 100ms wird geschrieben
+         * 
+         * Zeit: 1.493 Sek.
+         * Zeit: 1.493 Sek.
+         * Zeit: 1.749 Sek.
+         * 
+         * 
+         * Zeit: 10.475 Sek.
+         * Zeit: 10.806 Sek.
+         * Zeit: 10.855 Sek.
+         */
 
         try(Producer<String, String> producer = new KafkaProducer<>(props, new StringSerializer(), new StringSerializer())) {
 
-            JsonObject json = Json.createObjectBuilder()
-                    .add("windrad", 6)
-                    .add("kw/h", 33)
-                    .build();
-
-            String msg = json.toString();
 
             long t1 = System.currentTimeMillis();
 
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i <= 1_000_000; i++) {
+
+                JsonObject json = Json.createObjectBuilder()
+                .add("windrad", 6)
+                .add("kw/h", 33)
+                .build();
+
+                String msg = json.toString();
 
                 String key = String.valueOf(round(random() * 1000));
 
